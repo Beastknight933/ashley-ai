@@ -23,8 +23,8 @@ SQLAlchemy>=2.0.0
 
 # Config & validation (pydantic v1 line for spaCy 3.7 compatibility)
 python-dotenv>=1.0.0
-pydantic>=1.10.14,<2.0.0
-pydantic-settings>=1.2.0,<2.0.0
+pydantic==1.10.13
+pydantic-settings==1.2.0
 
 # Logging / UI
 structlog>=23.0.0
