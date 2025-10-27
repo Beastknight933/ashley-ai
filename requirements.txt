@@ -1,0 +1,17 @@
+# Core dependencies for Medusa AI
+pygame>=2.1.0
+speechrecognition>=3.10.0
+edge-tts>=6.1.0
+
+# Optional dependencies (if you want to use them)
+# Note: spaCy has compatibility issues with Python 3.12
+# If you need spaCy, consider using Python 3.11 or wait for spaCy update
+# spacy>=3.4.0
+transformers>=4.20.0
+requests>=2.28.0
+
+# Google Calendar integration (for alarm functionality)
+pytz>=2023.3
+google-api-python-client>=2.0.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0

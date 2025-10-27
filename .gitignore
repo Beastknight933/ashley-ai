@@ -1,0 +1,282 @@
+# ==================================================
+# SECURITY - CRITICAL FILES (NEVER COMMIT THESE!)
+# ==================================================
+# Environment variables with API keys
+.env
+.env.local
+.env.*.local
+
+# Google OAuth credentials and tokens
+credentials.json
+token.pickle
+token-tasks.pickle
+client_secret*.json
+
+# API keys and secrets
+*_secret.txt
+*_key.txt
+api_keys.txt
+
+# Configuration files with sensitive data
+config.local.json
+secrets.json
+
+# ==================================================
+# PYTHON
+# ==================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#Pipfile.lock
+
+# UV
+#uv.lock
+
+# poetry
+#poetry.lock
+#poetry.toml
+
+# pdm
+#pdm.lock
+#pdm.toml
+.pdm-python
+.pdm-build/
+
+# pixi
+#pixi.lock
+.pixi
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+.idea/
+
+# ==================================================
+# PROJECT SPECIFIC
+# ==================================================
+# Abstra
+.abstra/
+
+# Logs
+*.log
+logs/
+assistant.log
+
+# Temporary TTS files
+output_*.mp3
+*.wav
+temp_audio/
+
+# Alarm text files
+alarmtext.txt
+
+# Test files (keep if needed for development)
+test.txt
+trial_*.py
+
+# Config files with local settings
+config.json
+config.local.json
+
+# ==================================================
+# EDITOR / IDE
+# ==================================================
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Cursor
+.cursorignore
+.cursorindexingignore
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ==================================================
+# OPERATING SYSTEM
+# ==================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+
+# ==================================================
+# MISC
+# ==================================================
+# Ruff cache
+.ruff_cache/
+
+# PyPI config
+.pypirc
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Media files (if you have large test files)
+# *.mp4
+# *.avi
+# *.mov
