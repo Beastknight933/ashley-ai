@@ -6,7 +6,7 @@ from alarm import create_event
 from weather_utils import handle_temperature, handle_weather
 from tts import speak, cleanup as tts_cleanup
 from stt import take_command, calibrate_microphone, get_microphone_source
-from nlp_processor import get_intent_spacy, get_intent_transformer, fallback_openrouter_gpt5
+from nlp_processor import get_intent_hybrid, get_intent_with_context, fallback_openrouter_gpt5
 
 # Initialize configuration
 config = get_config()
@@ -107,9 +107,12 @@ def handle_cancel_alarm(voice_input):
 
 # ---------- MAIN AI ASSISTANT LOOP ----------
 def assistant_loop():
-    """Main assistant loop with NLP intent classification and OpenRouter fallback."""
-    logger.info("Starting assistant loop")
+    """Enhanced assistant loop with improved NLP intent classification and context awareness."""
+    logger.info("Starting enhanced assistant loop")
     speak(f"Hello! I'm {config.get('ASSISTANT_NAME')}, your AI assistant.")
+    
+    # Conversation history for context awareness
+    conversation_history = []
     
     with get_microphone_source() as source:
         try:
@@ -128,95 +131,131 @@ def assistant_loop():
                 query = query.lower().strip()
                 logger.info(f"User query: {query}")
                 
-                # Primary intent detection using transformer model
-                intent = get_intent_transformer(query)
-                if intent == "unknown":
-                    # Fallback to spaCy if transformer doesn't recognize intent
-                    intent = get_intent_spacy(query)
+                # Enhanced intent detection with context
+                intent, confidence, entities = get_intent_with_context(query, conversation_history)
                 
-                logger.info(f"Detected intent: {intent}")
+                logger.info(f"Detected intent: {intent} (confidence: {confidence:.2f})")
+                logger.info(f"Extracted entities: {entities}")
                 
-                # Handle intents using NLP classification
+                # Add to conversation history
+                conversation_history.append(query)
+                if len(conversation_history) > 10:  # Keep last 10 interactions
+                    conversation_history.pop(0)
+                
+                # Handle intents using enhanced NLP classification
                 if intent == "exit":
                     speak("Alright, have a great day! I'm just a call away.")
                     logger.info("User requested exit")
                     break
                 
-                elif intent == "greet":
+                elif intent in ["greet", "smalltalk_hello"]:
                     greet_user()
                 
-                elif intent == "search_google":
-                    handle_google_search(query)
+                elif intent in ["get_name", "get_capabilities"]:
+                    if intent == "get_name":
+                        speak(f"I'm {config.get('ASSISTANT_NAME')}, your AI assistant.")
+                    else:
+                        speak("I can help you with weather, search, alarms, app control, and much more. Just ask!")
+                
+                elif intent in ["smalltalk_howareyou", "smalltalk_ok", "thanks", "compliment"]:
+                    if intent == "smalltalk_howareyou":
+                        speak("I'm doing great, thank you for asking! How can I help you today?")
+                    elif intent == "thanks":
+                        speak("You're very welcome! Is there anything else I can help you with?")
+                    elif intent == "compliment":
+                        speak("Thank you so much! That's very kind of you to say.")
+                    else:
+                        speak("That's wonderful to hear! How can I assist you today?")
+                
+                elif intent in ["search_google", "general_search"]:
+                    # Extract search query from entities or use full query
+                    search_query = entities.get("search_query", [query])[0] if entities.get("search_query") else query
+                    handle_google_search(search_query)
                 
                 elif intent == "search_youtube":
-                    handle_youtube_search(query)
+                    search_query = entities.get("search_query", [query])[0] if entities.get("search_query") else query
+                    handle_youtube_search(search_query)
                 
                 elif intent == "search_wikipedia":
-                    handle_wikipedia_search(query)
+                    search_query = entities.get("search_query", [query])[0] if entities.get("search_query") else query
+                    handle_wikipedia_search(search_query)
                 
-                elif intent == "temperature":
+                elif intent in ["temperature", "weather", "weather_extended"]:
                     try:
-                        handle_temperature(query)
+                        if intent == "temperature":
+                            handle_temperature(query)
+                        else:
+                            handle_weather(query)
                     except APIError:
-                        speak("I couldn't get the temperature right now. Please try again later.")
+                        speak("I couldn't get the weather information right now. Please try again later.")
                 
-                elif intent == "weather":
-                    try:
-                        handle_weather(query)
-                    except APIError:
-                        speak("I couldn't get the weather information. Please try again later.")
-                
-                elif intent == "get_time":
+                elif intent in ["get_time", "get_date", "get_datetime"]:
                     now = datetime.datetime.now()
-                    strTime = now.strftime("%I:%M %p")
-                    speak(f"Sir, the time is {strTime}")
+                    if intent == "get_time":
+                        strTime = now.strftime("%I:%M %p")
+                        speak(f"Sir, the time is {strTime}")
+                    elif intent == "get_date":
+                        strDate = now.strftime("%A, %B %d, %Y")
+                        speak(f"Today is {strDate}")
+                    else:  # get_datetime
+                        strTime = now.strftime("%I:%M %p")
+                        strDate = now.strftime("%A, %B %d, %Y")
+                        speak(f"Sir, today is {strDate} and the time is {strTime}")
                 
-                elif intent == "get_date":
-                    now = datetime.datetime.now()
-                    strDate = now.strftime("%A, %B %d, %Y")
-                    speak(f"Today is {strDate}")
-                
-                elif intent == "open_app":
-                    handle_open_app(query)
+                elif intent in ["open_app", "app_control"]:
+                    # Extract app name from entities or use full query
+                    app_name = entities.get("app_name", [query])[0] if entities.get("app_name") else query
+                    handle_open_app(app_name)
                 
                 elif intent == "close_app":
-                    handle_close_app(query)
+                    app_name = entities.get("app_name", [query])[0] if entities.get("app_name") else query
+                    handle_close_app(app_name)
                 
-                # Alarm commands (keeping these as they need special handling)
-                elif "set an alarm" in query or "set alarm" in query:
-                    speak("Would you like to type the time or say it aloud?")
-                    print("You can either speak a date like 'tomorrow at 10 AM' or type it.")
-                    user_input = input("If typing, enter time (YYYY-MM-DD HH:MM AM/PM): ").strip()
+                elif intent in ["set_alarm", "list_alarms", "cancel_alarm"]:
+                    if intent == "set_alarm":
+                        speak("Would you like to type the time or say it aloud?")
+                        print("You can either speak a date like 'tomorrow at 10 AM' or type it.")
+                        user_input = input("If typing, enter time (YYYY-MM-DD HH:MM AM/PM): ").strip()
+                        
+                        if user_input:
+                            alarm(user_input)
+                        else:
+                            speak("Speak now to set alarm.")
+                            try:
+                                from alarm import set_alarm_voice
+                                voice_input = take_command(source)
+                                if voice_input:
+                                    set_alarm_voice(voice_input, "Voice Alarm")
+                                else:
+                                    speak("Couldn't detect any speech. Please try again.")
+                            except Exception as e:
+                                logger.error(f"Alarm setting error: {e}")
+                                speak("I couldn't set the alarm. Please try again.")
                     
-                    if user_input:
-                        alarm(user_input)
-                    else:
-                        speak("Speak now to set alarm.")
-                        try:
-                            from alarm import set_alarm_voice
-                            voice_input = take_command(source)
-                            if voice_input:
-                                set_alarm_voice(voice_input, "Voice Alarm")
-                            else:
-                                speak("Couldn't detect any speech. Please try again.")
-                        except Exception as e:
-                            logger.error(f"Alarm setting error: {e}")
-                            speak("I couldn't set the alarm. Please try again.")
+                    elif intent == "list_alarms":
+                        handle_list_alarms()
+                    
+                    elif intent == "cancel_alarm":
+                        speak("Which alarm would you like to cancel?")
+                        voice_input = take_command(source)
+                        if voice_input:
+                            handle_cancel_alarm(voice_input)
+                        else:
+                            speak("Couldn't detect any speech. Please try again.")
                 
-                elif "list alarms" in query or "show alarms" in query:
-                    handle_list_alarms()
+                elif intent == "help":
+                    speak("I can help you with weather, search the web, set alarms, control apps, tell time, and much more. Just ask me anything!")
                 
-                elif "cancel alarm" in query or "delete alarm" in query:
-                    speak("Which alarm would you like to cancel?")
-                    voice_input = take_command(source)
-                    if voice_input:
-                        handle_cancel_alarm(voice_input)
+                elif intent == "repeat":
+                    if conversation_history:
+                        last_response = conversation_history[-1] if len(conversation_history) > 1 else "I don't have anything to repeat yet."
+                        speak(f"I said: {last_response}")
                     else:
-                        speak("Couldn't detect any speech. Please try again.")
+                        speak("I don't have anything to repeat yet.")
                 
                 # Default fallback - Use OpenRouter GPT 5 Pro for unknown intents
                 else:
-                    logger.info(f"Unknown intent '{intent}', using OpenRouter GPT 5 Pro fallback")
+                    logger.info(f"Unknown intent '{intent}' (confidence: {confidence:.2f}), using OpenRouter GPT 5 Pro fallback")
                     response = fallback_openrouter_gpt5(query, OPENROUTER_API_KEY)
                     if response:
                         print(f"GPT 5 Pro response: {response}")
