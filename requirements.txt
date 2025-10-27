@@ -1,40 +1,43 @@
-# Core dependencies for Ashley AI
+# Core - Ashley AI
 pygame>=2.5.0
-speechrecognition>=3.10.0
+SpeechRecognition>=3.10.0
 edge-tts>=6.1.0
 
-# Enhanced NLP and AI dependencies
-spacy>=3.7.0  # Fixed Python 3.12 compatibility
-transformers>=4.35.0  # Latest stable version
-torch>=2.1.0  # For better transformer performance
-fuzzywuzzy>=0.18.0  # For enhanced fuzzy matching
-python-Levenshtein>=0.21.0  # For faster fuzzy matching
+# NLP / AI
+spacy==3.7.4
+transformers==4.45.2
+# Torch: 2.4.x supports Python 3.12; install CPU or CUDA variant as needed
+torch==2.4.1
 
-# System monitoring and process management
-psutil>=5.9.0  # For better process management
-requests>=2.31.0  # Updated HTTP library
+# Fuzzy matching (fuzzywuzzy is deprecated)
+thefuzz==0.22.1
+python-Levenshtein>=0.21.0
+
+# System / HTTP
+psutil>=5.9.0
+requests>=2.31.0
 
 # Database and storage
-sqlite3  # Built-in with Python
-sqlalchemy>=2.0.0  # ORM for database operations
+# sqlite3  <-- DO NOT LIST (stdlib)
+SQLAlchemy>=2.0.0
 
-# Configuration and environment management
-python-dotenv>=1.0.0  # Environment variable management
-pydantic>=2.0.0  # Data validation and settings
-pydantic-settings>=2.0.0  # Settings management
+# Config & validation (pydantic v1 line for spaCy 3.7 compatibility)
+python-dotenv>=1.0.0
+pydantic>=1.10.14,<2.0.0
+pydantic-settings>=1.2.0,<2.0.0
 
-# Enhanced logging and monitoring
-structlog>=23.0.0  # Structured logging
-colorama>=0.4.6  # Colored terminal output
-rich>=13.0.0  # Rich text and beautiful formatting
+# Logging / UI
+structlog>=23.0.0
+colorama>=0.4.6
+rich>=13.0.0
 
-# Google Calendar integration (for alarm functionality)
+# Google Calendar integration
 pytz>=2023.3
 google-api-python-client>=2.100.0
 google-auth-httplib2>=0.2.0
 google-auth-oauthlib>=1.2.0
 
-# Additional utilities
-python-multipart>=0.0.6  # For file uploads
-websockets>=12.0  # WebSocket support
-aiofiles>=23.0.0  # Async file operations
+# Utilities
+python-multipart>=0.0.6
+websockets>=12.0
+aiofiles>=23.0.0

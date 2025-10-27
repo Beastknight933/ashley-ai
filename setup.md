@@ -35,7 +35,17 @@ source venv/bin/activate
 
 ### 3. Install Dependencies
 ```bash
+# keep build tools current
+python -m pip install --upgrade pip setuptools wheel
+
+# install torch first (CPU build)
+pip install torch==2.4.1
+
+# install everything else
 pip install -r requirements.txt
+
+# (optional) small spaCy model if you need English NLP out of the box
+python -m spacy download en_core_web_sm
 ```
 
 ### 4. Setup Environment Variables
