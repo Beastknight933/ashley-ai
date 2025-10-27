@@ -14,7 +14,7 @@ def test_openrouter_with_rag_simple():
     # Test query
     test_query = "What is your name?"
     
-    # API key from medusa-ai(llm).py
+    # API key from ashley-ai(llm).py
     api_key = "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"
     
     try:
@@ -45,8 +45,8 @@ Please respond as Ashley, the AI assistant. Be helpful, professional, and addres
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://medusa-ai.local",
-                "X-Title": "medusa--ai",
+                "HTTP-Referer": "https://ashley-ai.local",
+                "X-Title": "ashley-ai",
             },
             data=json.dumps({
                 "model": "openai/gpt-5-pro",

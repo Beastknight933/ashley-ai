@@ -22,7 +22,7 @@ def speak(audio, voice="en-US-MichelleNeural", use_ssml=False):
     """
     output_file = f"output_{uuid.uuid4()}.mp3"
 
-    # Wrap text in SSML if requested (useful for Medusa voice effects)
+    # Wrap text in SSML if requested (useful for Ashley voice effects)
     text_to_speak = audio
     if use_ssml:
         text_to_speak = f"""
@@ -146,10 +146,10 @@ def cleanup():
     except Exception as e:
         print(f"Error during emergency cleanup: {e}")
 
-# Convenience function for Medusa voice (with SSML effects)
-def medusa_speak(audio):
+# Convenience function for Ashley voice (with SSML effects)
+def ashley_speak_enhanced(audio):
     """
-    Speak with Medusa voice effects (slower, deeper tone).
+    Speak with Ashley voice effects (slower, deeper tone).
     """
     speak(audio, voice="en-GB-LibbyNeural", use_ssml=True)
 

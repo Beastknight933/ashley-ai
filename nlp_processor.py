@@ -100,8 +100,8 @@ Please respond as Ashley, the AI assistant. Be helpful, professional, and addres
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://medusa-ai.local",  # Optional. Site URL for rankings on openrouter.ai.
-                "X-Title": "medusa--ai",  # Optional. Site title for rankings on openrouter.ai.
+                "HTTP-Referer": "https://ashley-ai.local",  # Optional. Site URL for rankings on openrouter.ai.
+                "X-Title": "ashley-ai",  # Optional. Site title for rankings on openrouter.ai.
             },
             data=json.dumps({
                 "model": "openai/gpt-5-pro",
@@ -232,8 +232,8 @@ Please respond as Ashley, the AI assistant. Be helpful, professional, and addres
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://medusa-ai.local",  # Optional. Site URL for rankings on openrouter.ai.
-                "X-Title": "medusa--ai",  # Optional. Site title for rankings on openrouter.ai.
+                "HTTP-Referer": "https://ashley-ai.local",  # Optional. Site URL for rankings on openrouter.ai.
+                "X-Title": "ashley-ai",  # Optional. Site title for rankings on openrouter.ai.
             },
             data=json.dumps({
                 "model": "openai/gpt-5-pro",

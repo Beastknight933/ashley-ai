@@ -1,4 +1,4 @@
-# Core dependencies for Medusa AI
+# Core dependencies for Ashley AI
 pygame>=2.1.0
 speechrecognition>=3.10.0
 edge-tts>=6.1.0

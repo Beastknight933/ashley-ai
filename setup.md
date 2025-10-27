@@ -1,6 +1,6 @@
-# AI Assistant Setup Guide
+# Ashley AI Assistant Setup Guide
 
-Complete setup instructions for the AI Assistant project.
+Complete setup instructions for the Ashley AI Assistant project.
 
 ---
 
@@ -61,8 +61,8 @@ If you want alarm functionality:
 
 ### 6. Run the Assistant
 ```bash
-# Using the updated main file
-python AI_main.py
+# Using the main file
+python main.py
 
 # Or test the alarm system
 python alarm.py
@@ -96,7 +96,7 @@ python alarm.py
 
 ```
 project/
-├── AI_main.py              # Main assistant loop (use this)
+├── main.py                 # Main assistant loop
 ├── trial_main.py           # Testing new features
 ├── alarm.py                # Alarm system (fixed version)
 ├── config.py               # Configuration management
@@ -113,6 +113,7 @@ project/
 ├── .env.template           # Environment template
 ├── .gitignore              # Git ignore rules
 ├── credentials.json        # Google OAuth (you provide)
+├── ashley-ai(llm).py       # OpenRouter API template
 └── assistant.log           # Log file (auto-generated)
 ```
 
@@ -286,6 +287,7 @@ When testing new features:
 2. ✅ Test basic voice commands
 3. ✅ Configure alarm system
 4. ⏳ Move API keys to `.env`
+5. ✅ Rename all references from Medusa to Ashley
 
 ### Short Term
 1. Integrate GPT-5 API

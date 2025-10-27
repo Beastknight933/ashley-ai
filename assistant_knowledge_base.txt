@@ -1,4 +1,4 @@
-# Medusa AI Assistant Knowledge Base
+# Ashley AI Assistant Knowledge Base
 
 ## Identity Information
 - **Name**: Ashley (or as configured in config)

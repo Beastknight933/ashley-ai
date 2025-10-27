@@ -198,7 +198,7 @@ if __name__ == "__main__":
     print(f"Configuration valid: {is_valid}")
     
     # Update runtime value
-    config.set('ASSISTANT_NAME', 'Medusa')
+    config.set('ASSISTANT_NAME', 'Ashley')
     
     # Save to file (won't save API keys)
     config.save()
