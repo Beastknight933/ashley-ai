@@ -3,18 +3,11 @@ import functools
 import traceback
 from typing import Callable, Any, Optional
 from tts import speak
+from enhanced_logging import get_enhanced_logger, log_errors, log_performance
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('assistant.log'),
-        logging.StreamHandler()
-    ]
-)
-
-logger = logging.getLogger(__name__)
+# Setup enhanced logging
+enhanced_logger = get_enhanced_logger("error_handler")
+logger = enhanced_logger.logger  # Keep backward compatibility
 
 # ---------- CUSTOM EXCEPTIONS ----------
 class AssistantError(Exception):
@@ -44,7 +37,7 @@ def handle_errors(
     error_message: Optional[str] = None
 ):
     """
-    Decorator for unified error handling.
+    Enhanced error handling decorator with structured logging.
     
     Args:
         speak_error: Whether to speak the error message to user
@@ -54,60 +47,61 @@ def handle_errors(
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            enhanced_logger.set_context(function=func.__name__)
+            
             try:
                 return func(*args, **kwargs)
             
             except SpeechRecognitionError as e:
-                logger.warning(f"Speech recognition error in {func.__name__}: {e}")
+                enhanced_logger.warning("Speech recognition error", exception=e)
                 if speak_error:
                     speak("I couldn't hear you clearly. Please try again.")
                 return default_return
             
             except TTSError as e:
-                logger.error(f"TTS error in {func.__name__}: {e}")
+                enhanced_logger.error("TTS error", exception=e)
                 print(f"TTS Error: {e}")  # Can't speak if TTS failed
                 return default_return
             
             except APIError as e:
-                logger.error(f"API error in {func.__name__}: {e}")
+                enhanced_logger.error("API error", exception=e)
                 if speak_error:
                     msg = error_message or "I'm having trouble connecting to that service right now."
                     speak(msg)
                 return default_return
             
             except ModuleImportError as e:
-                logger.error(f"Import error in {func.__name__}: {e}")
+                enhanced_logger.error("Import error", exception=e)
                 if speak_error:
                     speak("A required module is not available.")
                 return default_return
             
             except FileNotFoundError as e:
-                logger.error(f"File not found in {func.__name__}: {e}")
+                enhanced_logger.error("File not found", exception=e)
                 if speak_error:
                     msg = error_message or "I couldn't find a required file."
                     speak(msg)
                 return default_return
             
             except PermissionError as e:
-                logger.error(f"Permission error in {func.__name__}: {e}")
+                enhanced_logger.error("Permission error", exception=e)
                 if speak_error:
                     speak("I don't have permission to do that.")
                 return default_return
             
             except ValueError as e:
-                logger.error(f"Value error in {func.__name__}: {e}")
+                enhanced_logger.error("Value error", exception=e)
                 if speak_error:
                     msg = error_message or "I received an invalid value."
                     speak(msg)
                 return default_return
             
             except KeyboardInterrupt:
-                logger.info(f"User interrupted {func.__name__}")
+                enhanced_logger.info("User interrupted function")
                 raise  # Re-raise to allow graceful shutdown
             
             except Exception as e:
-                logger.error(f"Unexpected error in {func.__name__}: {e}")
-                logger.error(traceback.format_exc())
+                enhanced_logger.critical("Unexpected error", exception=e)
                 if speak_error:
                     msg = error_message or "Something went wrong. Please try again."
                     speak(msg)
