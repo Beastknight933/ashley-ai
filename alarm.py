@@ -44,7 +44,20 @@ def get_calendar_service():
                 
                 logger.info("Starting OAuth flow")
                 flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
+                # Prefer a stable, configurable port to avoid random-port firewall issues
+                preferred_port_env = os.getenv('GOOGLE_OAUTH_PORT')
+                preferred_port = int(preferred_port_env) if preferred_port_env else 51018
+                try:
+                    creds = flow.run_local_server(
+                        port=preferred_port,
+                        open_browser=True,
+                        authorization_prompt_message='Please visit this URL to authorize: {url}',
+                        success_message='Authorization complete. You may close this window.'
+                    )
+                except OSError as e:
+                    logger.warning(f"Local server on port {preferred_port} failed ({e}). Falling back to console flow.")
+                    # Fallback to manual copy/paste code if binding fails
+                    creds = flow.run_console(authorization_prompt_message='Please visit this URL to authorize: {url}')
             
             # Save credentials
             with open('token.pickle', 'wb') as token:

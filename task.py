@@ -20,7 +20,18 @@ def get_tasks_service():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+            preferred_port_env = os.getenv('GOOGLE_OAUTH_PORT')
+            preferred_port = int(preferred_port_env) if preferred_port_env else 51018
+            try:
+                creds = flow.run_local_server(
+                    port=preferred_port,
+                    open_browser=True,
+                    authorization_prompt_message='Please visit this URL to authorize: {url}',
+                    success_message='Authorization complete. You may close this window.'
+                )
+            except OSError as e:
+                # If binding fails (port in use or blocked), fall back to manual console flow
+                creds = flow.run_console(authorization_prompt_message='Please visit this URL to authorize: {url}')
         with open('token-tasks.pickle', 'wb') as token:
             pickle.dump(creds, token)
     return build('tasks', 'v1', credentials=creds)
