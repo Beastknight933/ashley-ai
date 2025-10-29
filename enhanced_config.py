@@ -8,7 +8,6 @@ import yaml
 from pathlib import Path
 from typing import Dict, Any, Optional, Union, List
 from pydantic import BaseSettings, Field, validator
-from pydantic_settings import BaseSettings as PydanticBaseSettings
 from dotenv import load_dotenv
 import logging
 from enhanced_logging import get_enhanced_logger
@@ -16,7 +15,7 @@ from enhanced_logging import get_enhanced_logger
 # Load environment variables
 load_dotenv()
 
-class AssistantSettings(PydanticBaseSettings):
+class AssistantSettings(BaseSettings):
     """Enhanced settings with validation and environment variable support"""
     
     # Basic Assistant Settings

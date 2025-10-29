@@ -21,10 +21,10 @@ requests>=2.31.0
 # sqlite3  <-- DO NOT LIST (stdlib)
 SQLAlchemy>=2.0.0
 
-# Config & validation (pydantic v1 line for spaCy 3.7 compatibility)
+# Config & validation (stick to Pydantic v1 for spaCy 3.7 compatibility)
 python-dotenv>=1.0.0
 pydantic==1.10.13
-pydantic-settings==1.2.0
+# Note: Removed pydantic-settings; code uses pydantic.BaseSettings (v1)
 
 # Logging / UI
 structlog>=23.0.0
